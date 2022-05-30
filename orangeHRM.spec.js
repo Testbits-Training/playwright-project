@@ -24,21 +24,23 @@ test.beforeEach(async ({ browser }) => {
   test('(+) Successfully Login with right credentials', async ({})=> {
     await login("Admin","admin123");
     await expect(page.locator('.head')).toHaveText('Dashboard');
+    await page.close();
     
     });
 
   test('(-) Login with invalid username', async ({})=> {
     await login("Admina","admin123");
     await expect(page.locator('text=Invalid credentials')).toBeVisible;
-
+    await page.close();
+    
     });
 
   test('(-) Login with invalid password', async ({})=> {
     await login("Admin","admin1234");
     await expect(page.locator('text=Invalid credentials')).toBeVisible;
+    await page.close();
     
-      
-      });
+    });
 
 });
 
