@@ -34,7 +34,7 @@ test.beforeEach(async ({ browser }) => {
     });
 
   test('(-) Login with invalid password', async ({})=> {
-    await login("Admina","admin123");
+    await login("Admin","admin1234");
     await expect(page.locator('text=Invalid credentials')).toBeVisible;
     
       
