@@ -13,7 +13,7 @@ const config = {
       headless: false,
       }
   },
-  //globalSetup: require.resolve('./loginState'),
+  globalSetup: require.resolve('./loginState'),
   projects: [
     {
       name: 'chromium',
