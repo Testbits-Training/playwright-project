@@ -1,44 +1,43 @@
 const { test, expect } = require('@playwright/test');
-//
 
-//Login function
-async function login( username , password) {
+//Test Credentials
+const VALID_USERNAME = "Admin";
+const VALID_PASSWORD = "admin123";
+const INVALID_USERNAME = "admi";
+const INVALID_PASSWORD = "abc123";
 
-  this.username = username;
-  this.password = password;
-
-  await page.goto('https://opensource-demo.orangehrmlive.com/');
-  await page.locator('input[name="txtUsername"]').click();
-  await page.locator('input[name="txtUsername"]').fill(this.username);
-  await page.locator('input[name="txtPassword"]').click();
-  await page.locator('input[name="txtPassword"]').fill(this.password);
-  await page.locator('input[id=btnLogin]').click();
-
-}
+//Test User
+const VALID_USER = "john.smith";
+const INVALID_USER = "Siti";
 
 test.describe('Login',()=>{ 
-test.beforeEach(async ({ browser }) => {
-    page = await browser.newPage();
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/');
   });
 
-  test('(+) Successfully Login with right credentials', async ({})=> {
-    await login("Admin","admin123");
+  
+  test('(+) Successfully Login with right credentials', async ({page})=> {
+    await page.locator('input[name="txtUsername"]').fill(VALID_USERNAME);
+    await page.locator('input[name="txtPassword"]').fill(VALID_PASSWORD);
+    await page.locator('input[id=btnLogin]').click();
     await expect(page.locator('.head')).toHaveText('Dashboard');
-    await page.close();
     
     });
 
-  test('(-) Login with invalid username', async ({})=> {
-    await login("Admina","admin123");
+  test('(-) Login with invalid username', async ({page})=> {
+    await page.locator('input[name="txtUsername"]').fill(INVALID_USERNAME);
+    await page.locator('input[name="txtPassword"]').fill(VALID_PASSWORD);
+    await page.locator('input[id=btnLogin]').click();
     await expect(page.locator('text=Invalid credentials')).toBeVisible;
-    await page.close();
     
     });
 
-  test('(-) Login with invalid password', async ({})=> {
-    await login("Admin","admin1234");
+  test('(-) Login with invalid password', async ({page})=> {
+    await page.locator('input[name="txtUsername"]').fill(VALID_USERNAME);
+    await page.locator('input[name="txtPassword"]').fill(INVALID_PASSWORD);
+    await page.locator('input[id=btnLogin]').click();
     await expect(page.locator('text=Invalid credentials')).toBeVisible;
-    await page.close();
     
     });
 
@@ -47,16 +46,22 @@ test.beforeEach(async ({ browser }) => {
 test.describe('Search Users',() => {
 test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note kawan2)
   
-  test('(+) Users enter valid username', async ({page}) => {
-    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/dashboard');
-    await page.locator('b:has-text("Admin")').hover();
-    await page.locator('text=User Management').hover();
-    await page.locator('text=Users').click();
-    await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill('john.smith');
-    await page.locator('text=Search').click();
-    await expect(page.locator('text=John.Smith')).toBeVisible;
-  
+  test.beforeEach(async ({ page }) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');  
   });
+
+    test('(+) Users enter valid username', async ({page}) => {
+      
+      await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(VALID_USER);
+      await page.locator('text=Search').click();
+      await expect(page.locator('text=John.Smith')).toBeVisible;
+    });
+
+    test('(+) Users enter invalid username', async ({page}) => {
+      await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(INVALID_USER);
+      await page.locator('text=Search').click();
+      await expect(page.locator('text=No Records Found')).toBeVisible;
+    });
 
 });
 
