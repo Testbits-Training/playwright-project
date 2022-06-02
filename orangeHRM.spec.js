@@ -86,6 +86,7 @@ test.describe('Users',() => {
       });
 });
 
+//Eql
 
 test.describe(' Search Key Performance Indicators',() =>{
   test.use({ storageState: 'storageState.json'});
@@ -191,6 +192,44 @@ test.describe(' Add New Key Performance Indicator',() => {
   });
 
 });
+
+//sambung sini Arif
+test.describe('Employment status',() => {
+  test.use({ storageState: 'storageState.json'});
+
+  test('(-) Add employment status', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+    await page.locator('input:has-text("Add")').click();
+    await page.locator('input[name="empStatus\\[name\\]"]').fill('ana');
+    await page.locator('input:has-text("Save")').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+    await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
+  });
+
+  test('(-) Delete employment status', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+    await page.locator('//a[text()="ana"]//preceding::input[1]').check();
+    await page.locator('input:has-text("Delete")').click();
+     await page.locator('#dialogDeleteBtn').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+    await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
+  });
+
+
+  test('(-) Delete multiple employment status', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+    await page.locator('//a[text()="ana"]//preceding::input[1]').check();
+    await page.locator('//a[text()="ana2"]//preceding::input[1]').check();
+    await page.locator('input:has-text("Delete")').click();
+     await page.locator('#dialogDeleteBtn').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+    await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
+  });
+
+});
+
+//Lailatul paste here
+
 async function createLogin({page}, username, password) {
   await page.locator('input[name="txtUsername"]').fill(username);
   await page.locator('input[name="txtPassword"]').fill(password);
