@@ -59,7 +59,6 @@ test.describe('Users',() => {
         await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(INVALID_USER);
         await page.locator('text=Search').click();
         await expect(page.locator('td[colspan="5"]')).toHaveText('No Records Found');
-
       });
 
       test('(-) Add users', async ({page}) => {
@@ -72,8 +71,6 @@ test.describe('Users',() => {
         await page.locator('#btnSave').click();
         await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');
         await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
-    
-
       });
 
       test('(-) Delete users', async ({page}) => {
@@ -204,6 +201,15 @@ test.describe('Employment status',() => {
     await page.locator('input:has-text("Save")').click();
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
+  });
+
+  test('(-) Add existing employment status', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+    await page.locator('input:has-text("Add")').click();
+    await page.locator('input[name="empStatus\\[name\\]"]').fill('Freelance');
+    await page.locator('input:has-text("Save")').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+    await expect(page.locator('text=Already exists')).toBeVisible();
   });
 
   test('(-) Delete employment status', async ({page}) => {
