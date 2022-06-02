@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect, chromium } = require('@playwright/test');
 
 //Test Login Credentials
 const VALID_USERNAME = "Admin";
@@ -11,7 +11,13 @@ const VALID_USER = "John.Smith";
 const INVALID_USER = "Siti";
 
 //Fill User Fields
-const USER_FIELDS = [];
+const USER_FIELDS = [     
+  '1',                      // Select Option Value = Admin
+  'John',                   //First Name
+  'Smith',                  //Second Name
+  'Johasdwesssd1',          //Username
+  'abcd1234'                //Password
+];
 
 test.describe('Login',()=>{ 
 
@@ -20,23 +26,17 @@ test.describe('Login',()=>{
   });
 
   test('(+) Successfully Login with right credentials', async ({page})=> {
-    await page.locator('input[name="txtUsername"]').fill(VALID_USERNAME);
-    await page.locator('input[name="txtPassword"]').fill(VALID_PASSWORD);
-    await page.locator('input[id=btnLogin]').click();
+    await createLogin({page},VALID_USERNAME,VALID_PASSWORD);
     await expect(page.locator('.head')).toHaveText('Dashboard');
   });
 
   test('(-) Login with invalid username', async ({page})=> {
-    await page.locator('input[name="txtUsername"]').fill(INVALID_USERNAME);
-    await page.locator('input[name="txtPassword"]').fill(VALID_PASSWORD);
-    await page.locator('input[id=btnLogin]').click();
+    await createLogin({page},INVALID_USERNAME,VALID_PASSWORD);
     await expect(page.locator('#spanMessage')).toHaveText('Invalid credentials');
   });
 
   test('(-) Login with invalid password', async ({page})=> {
-    await page.locator('input[name="txtUsername"]').fill(VALID_USERNAME);
-    await page.locator('input[name="txtPassword"]').fill(INVALID_PASSWORD);
-    await page.locator('input[id=btnLogin]').click();
+    await createLogin({page},VALID_USERNAME,INVALID_PASSWORD);
     await expect(page.locator('#spanMessage')).toHaveText('Invalid credentials');
   });
 
@@ -52,46 +52,45 @@ test.describe('Users',() => {
       test('(+) Users enter valid username', async ({page}) => {
         await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(VALID_USER);
         await page.locator('#searchBtn').click();
-        const locator = page.locator('//a[text()=' + '"' + VALID_USER + '"]');
-        await expect(locator).toHaveCount(1);
+        await expect(page.locator('//td[@class="left"]//a')).toHaveText(VALID_USER);
       });
  
       test('(-) Users enter invalid username', async ({page}) => {
         await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(INVALID_USER);
         await page.locator('text=Search').click();
-        await expect(page.locator('//td[text()="No Records Found"]')).toHaveCount(1);
+        await expect(page.locator('td[colspan="5"]')).toHaveText('No Records Found');
 
       });
 
       test('(-) Add users', async ({page}) => {
         await page.locator('input:has-text("Add")').click();
-        await page.locator('select[name="systemUser\\[userType\\]"]').selectOption('1');
-        await page.locator('input[name="systemUser\\[employeeName\\]\\[empName\\]"]').fill('Khaby Lame');
-        
-        if (await expect(page.locator('span[for="systemUser_employeeName_empName"]')).toHaveText('Employee does not exist') == true ){
-          await page.goto('https://opensource-demo.orangehrmlive.com/index.php/pim/addEmployee');
-          await page.locator('input[name="firstName"]').fill('Khaby');
-          await page.locator('input[name="lastName"]').fill('Lame');
-          await page.locator('input:has-text("Save")').click();
-          await expect(page.locator('//h1[text()="Khaby Lame"]')).toHaveCount(1);
-        };
-        
-        await page.locator('input[name="systemUser\\[userName\\]"]').fill('Khaby.Lame');
-        await page.locator('input[name="systemUser\\[password\\]"]').fill('abcd1234');
-        await page.locator('input[name="systemUser\\[confirmPassword\\]"]').fill('abcd1234');
-        await page.locator('input:has-text("Save")').click();
-        //await expect(page.locator('text=Successfully Saved')).toBeVisible;
+        await page.locator('select[name="systemUser\\[userType\\]"]').selectOption(USER_FIELDS[0]);
+        await page.locator('input[name="systemUser\\[employeeName\\]\\[empName\\]"]').fill(USER_FIELDS[1] + ' ' + USER_FIELDS[2]);
+        await page.locator('input[name="systemUser\\[userName\\]"]').fill(USER_FIELDS[3]);
+        await page.locator('input[name="systemUser\\[password\\]"]').fill(USER_FIELDS[4]);
+        await page.locator('input[name="systemUser\\[confirmPassword\\]"]').fill(USER_FIELDS[4]);
+        await page.locator('#btnSave').click();
+        await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');
+        await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
+    
+
       });
 
       test('(-) Delete users', async ({page}) => {
-        await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill('rebecca1');
+        await page.locator('input[name="searchSystemUser\\[employeeName\\]\\[empName\\]"]').fill(USER_FIELDS[3]);
         await page.locator('text=Search').click();
-        await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');
-        await page.locator('//a[text()="rebecca1"]//preceding::input[1]').check();
-        await page.locator('input:has-text("Delete")').click();
-        await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');
-        //await expect(page.locator('text=Successfully Deleted Close')).toBeVisible;
+        await page.locator('//a[text()='+ '"' + USER_FIELDS[3] + '"]//preceding::input[1]').check();
+        await page.locator('#btnDelete').click();
+        await page.locator('#dialogDeleteBtn').click();
+        await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
       });
 });
+
+async function createLogin({page}, username, password) {
+  await page.locator('input[name="txtUsername"]').fill(username);
+  await page.locator('input[name="txtPassword"]').fill(password);
+  await page.locator('input[id=btnLogin]').click();
+}
+
 
 
