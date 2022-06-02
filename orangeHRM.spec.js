@@ -86,7 +86,6 @@ test.describe('Users',() => {
       });
 });
 
-
 test.describe(' Search Key Performance Indicators',() =>{
   test.use({ storageState: 'storageState.json'});
 
@@ -108,9 +107,6 @@ test.describe(' Search Key Performance Indicators',() =>{
 
 
 });
-
-
-
 test.describe(' Add New Key Performance Indicator',() => {
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
   
@@ -190,7 +186,13 @@ test.describe(' Add New Key Performance Indicator',() => {
   await expect(page.locator("xpath=(//span[@for='defineKpi360_minRating'])[1]")).toBeVisible("Should be greater than 0");
   });
 
+  
 });
+
+test.describe('(+) Successfully delete a key performance indicator', () => {
+
+});
+
 async function createLogin({page}, username, password) {
   await page.locator('input[name="txtUsername"]').fill(username);
   await page.locator('input[name="txtPassword"]').fill(password);
