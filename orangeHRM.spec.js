@@ -190,6 +190,49 @@ test.describe('Employment status',() => {
 });
 
 //Lailatul paste here
+test.use//lailatul
+
+test.describe('Search My Records',() => {
+ ({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+
+  test('(+) Successfully shows the record', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewMyAttendanceRecord');
+    await page.locator('input[name="attendance\\[date\\]"]').fill('2021-05-09');
+    await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
+    await expect(page.locator('#noRecordsColumn')).toHaveText('No attendance records to display');
+  });
+
+});
+
+test.describe('Punch In and Punch Out',() => {
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+
+  test('(+) Punch in successfully recorded', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/punchIn');
+    await page.locator('input[name="attendance\\[date\\]"]').fill('2022-07-14');
+    await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
+    await page.locator('input[name="attendance\\[time\\]"]').fill('10:00');
+    await page.locator('textarea[name="attendance\\[note\\]"]').click();
+    await page.locator('textarea[name="attendance\\[note\\]"]').fill('Shift A');
+    await page.locator('input:has-text("In")').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/attendance/punchOut');
+  });
+
+  test('(+) Punch out successfully recorded', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/punchOut');
+    await page.locator('input[name="attendance\\[date\\]"]').fill('2022-07-14');
+    await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
+    await page.locator('input[name="attendance\\[time\\]"]').fill('15:00');
+    await page.locator('textarea[name="attendance\\[note\\]"]').click();
+    await page.locator('textarea[name="attendance\\[note\\]"]').fill('Shift A');
+    await page.locator('input:has-text("Out")').click();
+    await page.locator('text=Successfully Saved Close').click();
+  });
+
+});
+
+
+
 
 async function createLogin({page}, username, password) {
   await page.locator('input[name="txtUsername"]').fill(username);
