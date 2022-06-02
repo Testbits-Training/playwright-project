@@ -52,8 +52,7 @@ test.describe('Users',() => {
       test('(+) Users enter valid username', async ({page}) => {
         await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(VALID_USER);
         await page.locator('#searchBtn').click();
-        const locator = page.locator('//a[text()=' + '"' + VALID_USER + '"]');
-        await expect(locator).toHaveCount(1);
+        await expect(page.locator('//td[@class="left"]//a')).toHaveText(VALID_USER);
       });
  
       test('(-) Users enter invalid username', async ({page}) => {
@@ -87,9 +86,9 @@ test.describe('Users',() => {
       });
 });
 
-async function createLogin({page}, a, b) {
-  await page.locator('input[name="txtUsername"]').fill(a);
-  await page.locator('input[name="txtPassword"]').fill(b);
+async function createLogin({page}, username, password) {
+  await page.locator('input[name="txtUsername"]').fill(username);
+  await page.locator('input[name="txtPassword"]').fill(password);
   await page.locator('input[id=btnLogin]').click();
 }
 
