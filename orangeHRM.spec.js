@@ -13,10 +13,10 @@ const INVALID_USER = "Siti";
 //Fill User Fields
 const USER_FIELDS = [     
   '1',                      // Select Option Value = Admin
-  'John',                   //First Name
-  'Smith',                  //Second Name
-  'Johasdwesssd1',          //Username
-  'abcd1234'                //Password
+  'John',                   // First Name
+  'Smith',                  // Second Name
+  'Johasdwesssd1',          // Username
+  'abcd1234'                // Password
 ];
 
 test.describe('Login',()=>{ 
@@ -182,7 +182,7 @@ test.describe('Employment status',() => {
     await page.locator('//a[text()="ana"]//preceding::input[1]').check();
     await page.locator('//a[text()="ana2"]//preceding::input[1]').check();
     await page.locator('input:has-text("Delete")').click();
-     await page.locator('#dialogDeleteBtn').click();
+    await page.locator('#dialogDeleteBtn').click();
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
   });
@@ -190,10 +190,10 @@ test.describe('Employment status',() => {
 });
 
 //Lailatul paste here
-test.use//lailatul
+//lailatul 
 
 test.describe('Search My Records',() => {
- ({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
 
   test('(+) Successfully shows the record', async ({page}) => {
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewMyAttendanceRecord');
@@ -226,13 +226,10 @@ test.describe('Punch In and Punch Out',() => {
     await page.locator('textarea[name="attendance\\[note\\]"]').click();
     await page.locator('textarea[name="attendance\\[note\\]"]').fill('Shift A');
     await page.locator('input:has-text("Out")').click();
-    await page.locator('text=Successfully Saved Close').click();
+    await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
   });
 
 });
-
-
-
 
 async function createLogin({page}, username, password) {
   await page.locator('input[name="txtUsername"]').fill(username);
