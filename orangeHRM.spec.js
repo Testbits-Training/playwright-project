@@ -183,21 +183,7 @@ test.describe('Delete Key Performance Indicator', () => {
    
     });
 })
-//-- before changes
-/*test.describe(' Search Key Performance Indicators',() =>{
-  test.use({ storageState: 'storageState.json'});
 
-  test.beforeEach(async ({page}) => {
-    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');  
-  });
-
-  test('(+) Sort the list base on job title', async({page}) =>{
-    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-    await page.locator('select[name="kpi360SearchForm\\[jobTitleCode\\]"]').selectOption('23');
-    await page.locator('input:has-text("Search")').click();
-  });
-});
-*/
 
 
 test.describe(' Add New Key Performance Indicator',() => {
@@ -242,6 +228,22 @@ test.describe(' Add New Key Performance Indicator',() => {
   });
 
 });
+//-- before changes
+/*test.describe(' Search Key Performance Indicators',() =>{
+  test.use({ storageState: 'storageState.json'});
+
+  test.beforeEach(async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');  
+  });
+
+  test('(+) Sort the list base on job title', async({page}) =>{
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
+    await page.locator('select[name="kpi360SearchForm\\[jobTitleCode\\]"]').selectOption('23');
+    await page.locator('input:has-text("Search")').click();
+  });
+});
+*/
+
 
 //sambung sini Arif
 test.describe('Employment status',() => {
