@@ -10,7 +10,7 @@ const config = {
     trace: 'on-first-retry',
     launchOptions: {
       slowMo: 100,
-      headless: false,
+      headless: false
       }
   },
   globalSetup: require.resolve('./loginState'),
