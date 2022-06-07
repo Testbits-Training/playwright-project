@@ -97,7 +97,8 @@ test.describe('Users',() => {
 
 test.describe('Employee List',() => { //Data driven from external xlsx file
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
-  
+
+   
       test('(+) Successfull add employee', async ({page}) => {
         //get excel data
         var XLSX = require("xlsx");
@@ -108,11 +109,12 @@ test.describe('Employee List',() => { //Data driven from external xlsx file
         for (let index = 2; index <= range.e.r + 1 ; index++) { //loop through each rows in XLSX file
           const firstName = worksheet[`A${index}`].v;
           const secondName = worksheet[`B${index}`].v;
-
+          const filePath = worksheet[`C${index}`].v;  //path for file directory
           await page.goto('https://opensource-demo.orangehrmlive.com/index.php/pim/viewEmployeeList/reset/1')
           await page.locator('#btnAdd').click();
           await page.locator('input[name="firstName"]').fill(firstName);
           await page.locator('input[name="lastName"]').fill(secondName);
+          await page.setInputFiles('#photofile',filePath);
           await page.locator('input:has-text("Save")').click();
           await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
         }
