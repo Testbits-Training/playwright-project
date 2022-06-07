@@ -296,6 +296,37 @@ test.describe('Punch In and Punch Out',() => {
 
 });
 
+test.describe('Employee Records',() => {
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+  
+    test('(+) Successfully shows the record', async ({page}) => {
+      await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewAttendanceRecord');
+      await page.locator('input[name="attendance\\[employeeName\\]\\[empName\\]"]').fill('jenny charls morphan');
+      await page.locator('input[name="attendance\\[date\\]"]').fill('2022-06-22');
+      await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
+      await page.locator('input:has-text("View")').click();
+      await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewAttendanceRecord');
+ 
+    });
+ 
+    test('(-) User did not enter employee name', async ({page}) => {
+     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewAttendanceRecord');
+     await page.locator('input[name="attendance\\[date\\]"]').fill('2022-06-22');
+     await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
+     await page.locator('input:has-text("View")').click();
+     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewAttendanceRecord');
+ 
+   });
+ 
+   test('(-) User did select any date', async ({page}) => {
+     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewAttendanceRecord');
+     await page.locator('input[name="attendance\\[employeeName\\]\\[empName\\]"]').fill('jenny charls morphan');
+     await page.locator('input[name="attendance\\[date\\]"]').fill('');
+     await page.locator('input:has-text("View")').click();
+     await expect(page.locator('#ui-datepicker-div')).toBeVisible();
+     
+ 
+   });
 async function createLogin({page}, username, password) {
   await page.locator('input[name="txtUsername"]').fill(username);
   await page.locator('input[name="txtPassword"]').fill(password);
