@@ -84,6 +84,7 @@ test.describe('Users',() => {
 });
 
 //Eql
+//test2
 
 test.describe(' Search Key Performance Indicators',() =>{
   test.use({ storageState: 'storageState.json'});
@@ -106,9 +107,6 @@ test.describe(' Search Key Performance Indicators',() =>{
 
 
 });
-
-
-
 test.describe(' Add New Key Performance Indicator',() => {
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
   
@@ -116,54 +114,34 @@ test.describe(' Add New Key Performance Indicator',() => {
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');  
   });
 
-  test('(+) Insert New KPI',async ({page}) => {
+ 
+    test('(+) Insert New KPI',async ({page}) => {  
+     
+      for (var i=0; i<=1; i++) {
+      await page.locator('input:has-text("Add")').click();
+      await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/saveKpi');
+      await page.locator('select[name="defineKpi360\\[jobTitleCode\\]"]').selectOption('23');
+      await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill(JobDesc);
+      await page.locator('input[name="defineKpi360\\[minRating\\]"]').fill(VALID_MIN_RATING);
+      await page.locator('input[name="defineKpi360\\[maxRating\\]"]').fill(VALID_MAX_RATING);
+      await page.locator('input:has-text("Save")').click();
+      await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
+
+
    
+  }
+});
 
-    // Click input:has-text("Add")
-  await page.locator('input:has-text("Add")').click();
-  await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/saveKpi');
-
-    //Select one of the JobTitle
-  await page.locator('select[name="defineKpi360\\[jobTitleCode\\]"]').selectOption('23');
-
-  // Fill input[name="defineKpi360\[keyPerformanceIndicators\]"]
-  await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill(VALID_KPI);
-
-  // Fill input[name="defineKpi360\[minRating\]"]
-  await page.locator('input[name="defineKpi360\\[minRating\\]"]').fill(VALID_MIN_RATING);
-
-
-  // Fill input[name="defineKpi360\[maxRating\]"]
-  await page.locator('input[name="defineKpi360\\[maxRating\\]"]').fill(VALID_MAX_RATING);
-
-  await page.locator('input:has-text("Save")').click();
-  await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-
-  });
+  
 
   test('(-) Entered Invalid Min/Max ratings',async ({page}) => {
-
-    // Click input:has-text("Add")
   await page.locator('input:has-text("Add")').click();
   await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/saveKpi');
-
-    //Select one of the JobTitle
   await page.locator('select[name="defineKpi360\\[jobTitleCode\\]"]').selectOption('23');
-
-  // Fill input[name="defineKpi360\[keyPerformanceIndicators\]"]
   await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill(VALID_KPI);
-
-  // Fill input[name="defineKpi360\[minRating\]"]
   await page.locator('input[name="defineKpi360\\[minRating\\]"]').fill(INVALID_MIN_RATING);
-
-
-  // Fill input[name="defineKpi360\[maxRating\]"]
   await page.locator('input[name="defineKpi360\\[maxRating\\]"]').fill(VALID_MAX_RATING);
-
-    // Clicks "Save" button
   await page.locator('input:has-text("Save")').click();
-
-    //Validate wether error message is displayed in the page or not
   await expect(page.locator("xpath=(//span[@for='defineKpi360_minRating'])[1]")).toHaveText("Should be less than 100");
   await expect(page.locator("xpath=(//span[@for='defineKpi360_maxRating'])[1]")).toHaveText("Max rating should be greater than Min rating");
 
@@ -188,13 +166,90 @@ test.describe(' Add New Key Performance Indicator',() => {
   await expect(page.locator("xpath=(//span[@for='defineKpi360_minRating'])[1]")).toBeVisible("Should be greater than 0");
   });
 
+  
 });
+
+test.describe('Delete Key Performance Indicator', () => {
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+
+  test('(+) Successfully delete a key performance indicator', async ({ page }) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
+    await page.locator('xpath=//a[text()=' +'"'+ JobDesc +'"]//preceding::input[1]').check();
+    //await page.locator('xpath=//a[text()=' +'"'+ JobDesc2 +'"]//preceding::input[1]').check();
+    await page.locator('input:has-text("Delete")').click();
+    await page.locator('#dialogDeleteBtn').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
+    //await page.locator('//a[text()='+ '"' + USER_FIELDS[3] + '"]//preceding::input[1]').check();
+   
+    });
+})
+
+
+
+test.describe(' Add New Key Performance Indicator',() => {
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+  
+  test.beforeEach(async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');  
+  });
+
+  test('(+) Insert New KPI',async ({page}) => {
+    await page.locator('input:has-text("Add")').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/saveKpi');
+    await page.locator('select[name="defineKpi360\\[jobTitleCode\\]"]').selectOption('23');
+    await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill(VALID_KPI);
+    await page.locator('input[name="defineKpi360\\[minRating\\]"]').fill(VALID_MIN_RATING);
+    await page.locator('input[name="defineKpi360\\[maxRating\\]"]').fill(VALID_MAX_RATING);
+    await page.locator('input:has-text("Save")').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
+  });
+
+  test('(-) Entered Invalid Min/Max ratings',async ({page}) => {
+    await page.locator('input:has-text("Add")').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/saveKpi');
+    await page.locator('select[name="defineKpi360\\[jobTitleCode\\]"]').selectOption('23');
+    await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill(VALID_KPI);
+    await page.locator('input[name="defineKpi360\\[minRating\\]"]').fill(INVALID_MIN_RATING);
+    await page.locator('input[name="defineKpi360\\[maxRating\\]"]').fill(VALID_MAX_RATING);
+    await page.locator('input:has-text("Save")').click();
+    await expect(page.locator("xpath=(//span[@for='defineKpi360_minRating'])[1]")).toHaveText("Should be less than 100");
+    await expect(page.locator("xpath=(//span[@for='defineKpi360_maxRating'])[1]")).toHaveText("Max rating should be greater than Min rating");
+  });
+
+  test('(-) User Enter Non Numeric Character',async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/saveKpi');
+    await page.locator('select[name="defineKpi360\\[jobTitleCode\\]"]').selectOption('23');
+    await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').click();
+    await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill('test');
+    await page.locator('input[name="defineKpi360\\[minRating\\]"]').fill('test');
+    await page.locator('input:has-text("Save")').click();
+    await expect(page.locator("xpath=(//span[@for='defineKpi360_minRating'])[1]")).toHaveText("Should be greater than 0");
+    await expect(page.locator("xpath=(//span[@for='defineKpi360_minRating'])[1]")).toBeVisible("Should be greater than 0");
+  });
+
+});
+//-- before changes
+/*test.describe(' Search Key Performance Indicators',() =>{
+  test.use({ storageState: 'storageState.json'});
+
+  test.beforeEach(async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');  
+  });
+
+  test('(+) Sort the list base on job title', async({page}) =>{
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
+    await page.locator('select[name="kpi360SearchForm\\[jobTitleCode\\]"]').selectOption('23');
+    await page.locator('input:has-text("Search")').click();
+  });
+});
+*/
+
 
 //sambung sini Arif
 test.describe('Employment status',() => {
   test.use({ storageState: 'storageState.json'});
 
-  test('(-) Add employment status', async ({page}) => {
+  test('(+) Add employment status', async ({page}) => {
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await page.locator('input:has-text("Add")').click();
     await page.locator('input[name="empStatus\\[name\\]"]').fill('ana');
@@ -212,7 +267,7 @@ test.describe('Employment status',() => {
     await expect(page.locator('text=Already exists')).toBeVisible();
   });
 
-  test('(-) Delete employment status', async ({page}) => {
+  test('(+) Delete employment status', async ({page}) => {
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await page.locator('//a[text()="ana"]//preceding::input[1]').check();
     await page.locator('input:has-text("Delete")').click();
@@ -222,7 +277,7 @@ test.describe('Employment status',() => {
   });
 
 
-  test('(-) Delete multiple employment status', async ({page}) => {
+  test('(+) Delete multiple employment status', async ({page}) => {
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await page.locator('//a[text()="ana"]//preceding::input[1]').check();
     await page.locator('//a[text()="ana2"]//preceding::input[1]').check();
@@ -231,16 +286,104 @@ test.describe('Employment status',() => {
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
   });
+  ////input[@id='ohrmList_chkSelectRecord_12']
+
+});
+
+  //Additional test case Arif
+
+  test.describe('Job Category',() => {
+    test.use({ storageState: 'storageState.json'});
+  
+    test('(+) Add Job Category', async ({page}) => {
+      await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/jobCategory');
+      await page.locator('input:has-text("Add")').click();
+      await page.locator('input[name="jobCategory\\[name\\]"]').click();
+      await page.locator('input[name="jobCategory\\[name\\]"]').fill('New Job Category');
+      await page.locator('input:has-text("Save")').click();
+      await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/jobCategory');
+      await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
+    });
+
+    test('(-) Add Existing Job Category', async ({page}) => {
+      await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/jobCategory');
+      await page.locator('input:has-text("Add")').click();
+      await page.locator('input[name="jobCategory\\[name\\]"]').click();
+      await page.locator('input[name="jobCategory\\[name\\]"]').fill('Engineering');
+      await page.locator('input:has-text("Save")').click();
+      await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/jobCategory');
+      await expect(page.locator('text=Already exists')).toBeVisible();
+    });
+
+    test('(+) Delete Job Category', async ({page}) => {
+      await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/jobCategory');
+      await page.locator('//a[text()="Job2"]//preceding::input[1]').check();
+      await page.locator('input:has-text("Delete")').click();
+      await page.locator('#dialogDeleteBtn').click();
+      await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/jobCategory');
+      await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
+  });
+  
+
+    test('(+) Delete Multiple Job Category', async ({page}) => {
+      await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/jobCategory');
+      await page.locator('//a[text()="Job2"]//preceding::input[1]').check();
+      await page.locator('//a[text()="Job3"]//preceding::input[1]').check();
+      await page.locator('input:has-text("Delete")').click();
+      await page.locator('#dialogDeleteBtn').click();
+      await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/jobCategory');
+      await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
+    });
 
 });
 
 //Lailatul paste here
+test.use//lailatul
+
+test.describe('Search My Records',() => {
+ ({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+
+  test('(+) Successfully shows the record', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewMyAttendanceRecord');
+    await page.locator('input[name="attendance\\[date\\]"]').fill('2021-05-09');
+    await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
+    await expect(page.locator('#noRecordsColumn')).toHaveText('No attendance records to display');
+  });
+
+});
+
+test.describe('Punch In and Punch Out',() => {
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+
+  test('(+) Punch in successfully recorded', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/punchIn');
+    await page.locator('input[name="attendance\\[date\\]"]').fill('2022-07-14');
+    await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
+    await page.locator('input[name="attendance\\[time\\]"]').fill('10:00');
+    await page.locator('textarea[name="attendance\\[note\\]"]').click();
+    await page.locator('textarea[name="attendance\\[note\\]"]').fill('Shift A');
+    await page.locator('input:has-text("In")').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/attendance/punchOut');
+  });
+
+  test('(+) Punch out successfully recorded', async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/punchOut');
+    await page.locator('input[name="attendance\\[date\\]"]').fill('2022-07-14');
+    await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
+    await page.locator('input[name="attendance\\[time\\]"]').fill('15:00');
+    await page.locator('textarea[name="attendance\\[note\\]"]').click();
+    await page.locator('textarea[name="attendance\\[note\\]"]').fill('Shift A');
+    await page.locator('input:has-text("Out")').click();
+    await page.locator('text=Successfully Saved Close').click();
+  });
+
+});
+
+
+
 
 async function createLogin({page}, username, password) {
   await page.locator('input[name="txtUsername"]').fill(username);
   await page.locator('input[name="txtPassword"]').fill(password);
   await page.locator('input[id=btnLogin]').click();
 }
-
-
-
