@@ -1,5 +1,6 @@
 const { test, expect, chromium } = require('@playwright/test');
 
+
 //Test Login Credentials
 const VALID_USERNAME = "Admin";
 const VALID_PASSWORD = "admin123";
@@ -94,6 +95,47 @@ test.describe('Users',() => {
       });
 });
 
+test.describe('Employee List',() => { //Data driven from external xlsx file
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+  
+      test('(+) Successfull add employee', async ({page}) => {
+        //get excel data
+        var XLSX = require("xlsx");
+        var workbook = XLSX.readFile("data/Employee.xlsx");
+        let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        var range = XLSX.utils.decode_range(worksheet['!ref']); //convert A1 range to 0 indexed form
+        
+        for (let index = 2; index <= range.e.r + 1 ; index++) { //loop through each rows in XLSX file
+          const firstName = worksheet[`A${index}`].v;
+          const secondName = worksheet[`B${index}`].v;
+
+          await page.goto('https://opensource-demo.orangehrmlive.com/index.php/pim/viewEmployeeList/reset/1')
+          await page.locator('#btnAdd').click();
+          await page.locator('input[name="firstName"]').fill(firstName);
+          await page.locator('input[name="lastName"]').fill(secondName);
+          await page.locator('input:has-text("Save")').click();
+          await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
+        }
+       
+      });
+ 
+      test('(-) Users enter invalid username', async ({page}) => {
+       
+        
+      });
+
+      test('(-) Add users', async ({page}) => {
+   
+        
+      });
+
+      test('(-) Delete users', async ({page}) => {
+ 
+        
+      });
+});
+
+
 //Eql
 
 
@@ -105,7 +147,6 @@ test.describe(' Search Key Performance Indicators',() =>{
   });
 
     test('(+) Sort the list base on job title', async({page}) =>{
-      
       await page.locator('select[name="kpi360SearchForm\\[jobTitleCode\\]"]').selectOption(JOB_TITLE);
       await page.locator('input:has-text("Search")').click();
       await expect(page.locator('(//td[@class="left"])[2]')).toHaveText('HR Manager');
