@@ -61,32 +61,32 @@ test.describe('Users',() => {
       await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');  
     });
 
-      test('(+) Users enter valid username', async ({page}) => {
-        await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(VALID_USER);
+      test('(+) Search users enter valid username', async ({page}) => {
+        await page.locator('#searchSystemUser_userName').fill(VALID_USER);
         await page.locator('#searchBtn').click();
         await expect(page.locator('//td[@class="left"]//a')).toHaveText(VALID_USER);
       });
  
-      test('(-) Users enter invalid username', async ({page}) => {
-        await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(INVALID_USER);
+      test('(-) Search users enter invalid username', async ({page}) => {
+        await page.locator('#searchSystemUser_userName').fill(INVALID_USER);
         await page.locator('text=Search').click();
         await expect(page.locator('td[colspan="5"]')).toHaveText('No Records Found');
       });
 
       test('(-) Add users', async ({page}) => {
-        await page.locator('input:has-text("Add")').click();
-        await page.locator('select[name="systemUser\\[userType\\]"]').selectOption(USER_ROLE);
-        await page.locator('input[name="systemUser\\[employeeName\\]\\[empName\\]"]').fill(USER_FIRST_NAME + ' ' + USER_SECOND_NAME);
-        await page.locator('input[name="systemUser\\[userName\\]"]').fill(USER_USERNAME);
-        await page.locator('input[name="systemUser\\[password\\]"]').fill(USER_PASSWORD);
-        await page.locator('input[name="systemUser\\[confirmPassword\\]"]').fill(USER_PASSWORD);
+        await page.locator('#btnAdd').click();
+        await page.locator('#systemUser_userType').selectOption(USER_ROLE);
+        await page.locator('#systemUser_employeeName_empName').fill(USER_FIRST_NAME + ' ' + USER_SECOND_NAME);
+        await page.locator('#systemUser_userName').fill(USER_USERNAME);
+        await page.locator('#systemUser_password').fill(USER_PASSWORD);
+        await page.locator('#systemUser_confirmPassword').fill(USER_PASSWORD);
         await page.locator('#btnSave').click();
         await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');
         await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
       });
 
       test('(-) Delete users', async ({page}) => {
-        await page.locator('input[name="searchSystemUser\\[employeeName\\]\\[empName\\]"]').fill(USER_USERNAME);
+        await page.locator('#searchSystemUser_employeeName_empName').fill(USER_USERNAME);
         await page.locator('text=Search').click();
         await page.locator('//a[text()='+ '"' + USER_USERNAME + '"]//preceding::input[1]').check();
         await page.locator('#btnDelete').click();
@@ -112,10 +112,10 @@ test.describe('Employee List',() => { //Data driven from external xlsx file
           const filePath = worksheet[`C${index}`].v;  //path for file directory
           await page.goto('https://opensource-demo.orangehrmlive.com/index.php/pim/viewEmployeeList/reset/1')
           await page.locator('#btnAdd').click();
-          await page.locator('input[name="firstName"]').fill(firstName);
-          await page.locator('input[name="lastName"]').fill(secondName);
+          await page.locator('#firstName').fill(firstName);
+          await page.locator('#lastName').fill(secondName);
           await page.setInputFiles('#photofile',filePath);
-          await page.locator('input:has-text("Save")').click();
+          await page.locator('#btnSave').click();
           await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
         }
        
@@ -367,9 +367,10 @@ test.describe('Employee Records',() => {
      await page.locator('input[name="attendance\\[date\\]"]').fill('');
      await page.locator('input:has-text("View")').click();
      await expect(page.locator('#ui-datepicker-div')).toBeVisible();
-     
- 
    });
+
+});
+
 async function createLogin({page}, username, password) {
   await page.locator('input[name="txtUsername"]').fill(username);
   await page.locator('input[name="txtPassword"]').fill(password);
