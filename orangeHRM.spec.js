@@ -94,8 +94,7 @@ test.describe('Users',() => {
       });
 });
 
-<<<<<<< Updated upstream
-=======
+
 test.describe('Employee List',() => { //Data driven from external xlsx file
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
 
@@ -137,7 +136,7 @@ test.describe('Employee List',() => { //Data driven from external xlsx file
 });
 
 
->>>>>>> Stashed changes
+
 //Eql
 
 
@@ -371,9 +370,10 @@ test.describe('Employee Records',() => {
      await page.locator('input[name="attendance\\[date\\]"]').fill('');
      await page.locator('input:has-text("View")').click();
      await expect(page.locator('#ui-datepicker-div')).toBeVisible();
-     
- 
    });
+});
+
+
 async function createLogin({page}, username, password) {
   await page.locator('input[name="txtUsername"]').fill(username);
   await page.locator('input[name="txtPassword"]').fill(password);
