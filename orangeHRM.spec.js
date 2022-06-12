@@ -25,6 +25,13 @@ const VALID_MIN_RATING = "0";
 const VALID_MAX_RATING = "100";
 const INVALID_MIN_RATING = "150";
 
+//Employement Status Name
+const STATUS_NAME = [
+  'Internship',
+  'Internship 2',
+  'Apparenticeship'
+];
+
 const jobDesc = [
   'Automation',
   'Manual'
@@ -98,28 +105,26 @@ test.describe('Users',() => {
 test.describe('Employee List',() => { //Data driven from external xlsx file
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
 
-   
-      test('(+) Successfull add employee', async ({page}) => {
+    test('(+) Successfull add employee', async ({page}) => {
         //get excel data
-        var XLSX = require("xlsx");
-        var workbook = XLSX.readFile("data/Employee.xlsx");
-        let worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        var range = XLSX.utils.decode_range(worksheet['!ref']); //convert A1 range to 0 indexed form
+      var XLSX = require("xlsx");
+      var workbook = XLSX.readFile("data/Employee.xlsx");
+      let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      var range = XLSX.utils.decode_range(worksheet['!ref']); //convert A1 range to 0 indexed form
         
-        for (let index = 2; index <= range.e.r + 1 ; index++) { //loop through each rows in XLSX file
-          const firstName = worksheet[`A${index}`].v;
-          const secondName = worksheet[`B${index}`].v;
-          const filePath = worksheet[`C${index}`].v;  //path for file directory
-          await page.goto('https://opensource-demo.orangehrmlive.com/index.php/pim/viewEmployeeList/reset/1')
-          await page.locator('#btnAdd').click();
-          await page.locator('#firstName').fill(firstName);
-          await page.locator('#lastName').fill(secondName);
-          await page.setInputFiles('#photofile',filePath);
-          await page.locator('#btnSave').click();
-          await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
-        }
-       
-      });
+      for (let index = 2; index <= range.e.r + 1 ; index++) { //loop through each rows in XLSX file
+        const firstName = worksheet[`A${index}`].v;
+        const secondName = worksheet[`B${index}`].v;
+        const filePath = worksheet[`C${index}`].v;  //path for file directory
+        await page.goto('https://opensource-demo.orangehrmlive.com/index.php/pim/viewEmployeeList/reset/1')
+        await page.locator('#btnAdd').click();
+        await page.locator('#firstName').fill(firstName);
+        await page.locator('#lastName').fill(secondName);
+        await page.setInputFiles('#photofile',filePath);
+        await page.locator('#btnSave').click();
+        await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
+      } 
+    });
  
       test('(-) Users enter invalid username', async ({page}) => {
        
@@ -250,55 +255,44 @@ test.describe(' Add New Key Performance Indicator',() => {
 
 });**/
 
+// Arif
 
-
-
-//sambung sini Arif
 test.describe('Employment status',() => {
   test.use({ storageState: 'storageState.json'});
+  
+  test.beforeEach(async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+   });
 
   test('(-) Add employment status', async ({page}) => {
-    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
-    await page.locator('input:has-text("Add")').click();
-    await page.locator('input[name="empStatus\\[name\\]"]').fill('ana');
-    await page.locator('input:has-text("Save")').click();
-    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+
+    await addEmployementStatus({page}, STATUS_NAME[0]);
+    await addEmployementStatus({page}, STATUS_NAME[1]);
+    await addEmployementStatus({page}, STATUS_NAME[2]);
     await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
   });
 
   test('(-) Add existing employment status', async ({page}) => {
-    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
-    await page.locator('input:has-text("Add")').click();
-    await page.locator('input[name="empStatus\\[name\\]"]').fill('Freelance');
-    await page.locator('input:has-text("Save")').click();
-    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+    await addEmployementStatus({page}, STATUS_NAME[0]);
     await expect(page.locator('text=Already exists')).toBeVisible();
   });
 
   test('(-) Delete employment status', async ({page}) => {
-    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
-    await page.locator('//a[text()="ana"]//preceding::input[1]').check();
-    await page.locator('input:has-text("Delete")').click();
-     await page.locator('#dialogDeleteBtn').click();
+    await deleteEmployementStatus({page}, STATUS_NAME[0], 'null');
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
   });
 
 
   test('(-) Delete multiple employment status', async ({page}) => {
-    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
-    await page.locator('//a[text()="ana"]//preceding::input[1]').check();
-    await page.locator('//a[text()="ana2"]//preceding::input[1]').check();
-    await page.locator('input:has-text("Delete")').click();
-    await page.locator('#dialogDeleteBtn').click();
+    await deleteEmployementStatus({page}, STATUS_NAME[1], STATUS_NAME[2])
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
   });
 
 });
 
-//Lailatul paste here
-//lailatul 
+// Lailatul
 
 test.describe('Search My Records',() => {
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
@@ -384,5 +378,28 @@ async function addKPI({page}, jobtitle, kpi, minRating, maxRating ) {
   await page.locator('input[name="defineKpi360\\[maxRating\\]"]').fill(maxRating);
   await page.locator('input:has-text("Save")').click();
 }
- 
 
+// ****************** Arif ***************************
+async function addEmployementStatus({page}, statusName) {
+  await page.locator('input:has-text("Add")').click();
+  await page.locator('input[name="empStatus\\[name\\]"]').fill(statusName);
+  await page.locator('input:has-text("Save")').click();
+  await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
+}
+
+async function deleteEmployementStatus({page}, statusName, statusName2) {
+  await page.locator('//a[text()=' + '"' + statusName + '"]//preceding::input[1]').check();
+  // 'if' function is for delete 1 employement status only
+  const visible = page.locator('//a[text()=' + '"' + statusName2 + '"]//preceding::input[1]');
+  if (await visible.isVisible()) {
+    await page.locator('//a[text()=' + '"' + statusName2 + '"]//preceding::input[1]').check();
+    await page.locator('input:has-text("Delete")').click();
+    await page.locator('#dialogDeleteBtn').click();
+  } else {
+    await page.locator('input:has-text("Delete")').click();
+    await page.locator('#dialogDeleteBtn').click();
+  }
+  }
+  
+//// ****************** Arif [END] ***************************
+  
