@@ -36,6 +36,10 @@ const jobDesc = [
   'Automation',
   'Manual'
 ]
+const KPIDEL = [
+  'Test',
+  'Test2'
+]
 
 
 test.describe('Login',()=>{ 
@@ -249,11 +253,9 @@ test.describe('Delete Key Performance Indicator', () => {
   test('(+) Successfully delete a key performance indicator', async ({ page }) => {
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
     await page.locator('xpath=//a[text()=' +'"'+ JobDesc +'"]//preceding::input[1]').check();
-    //await page.locator('xpath=//a[text()=' +'"'+ JobDesc2 +'"]//preceding::input[1]').check();
     await page.locator('input:has-text("Delete")').click();
     await page.locator('#dialogDeleteBtn').click();
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-    //await page.locator('//a[text()='+ '"' + USER_FIELDS[3] + '"]//preceding::input[1]').check();
    
     });
 })
