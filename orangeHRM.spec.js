@@ -38,7 +38,8 @@ const jobDesc = [
 ]
 const KPIDEL = [
   'Test',
-  'Test2'
+  'Test2',
+  'Test3'
 ]
 
 
@@ -259,34 +260,6 @@ test.describe('Delete Key Performance Indicator', () => {
    
     });
 })
-
-/** 
-test.describe(' Add New Key Performance Indicator',() => {
-  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
-  
-  test.beforeEach(async ({page}) => {
-    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/saveKpi');
-  });
-
-  test('(+) Insert New KPI',async ({page}) => {
-    await addKPI({page}, JOB_TITLE , VALID_KPI , VALID_MIN_RATING , VALID_MAX_RATING);
-    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-    await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
-  });
-
-  test('(-) Entered Invalid Min/Max ratings',async ({page}) => {
-    await addKPI({page}, JOB_TITLE , VALID_KPI , INVALID_MIN_RATING , VALID_MAX_RATING);
-    await expect(page.locator("xpath=(//span[@for='defineKpi360_minRating'])[1]")).toHaveText("Should be less than 100");
-    await expect(page.locator("xpath=(//span[@for='defineKpi360_maxRating'])[1]")).toHaveText("Max rating should be greater than Min rating");
-  });
-
-  test('(-) User Enter Non Numeric Character',async ({page}) => {
-    await addKPI({page}, JOB_TITLE , VALID_KPI , 'test' , 'test');
-    await expect(page.locator("xpath=(//span[@for='defineKpi360_minRating'])[1]")).toHaveText("Should be greater than 0");
-  });
-
-});**/
-
 
 // Arif
 
