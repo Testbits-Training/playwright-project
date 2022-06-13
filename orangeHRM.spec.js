@@ -256,6 +256,13 @@ test.describe('Delete Key Performance Indicator', () => {
     //await page.locator('//a[text()='+ '"' + USER_FIELDS[3] + '"]//preceding::input[1]').check();
    
     });
+  test('(+) Successfully delete multiple key Performance indicator', async ({ page }) =>{
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
+    await page.locator('xpath=//a[text()="Test"]//preceding::input[1]').check();
+    await page.locator('xpath=//a[text()="Test2"]//preceding::input[1]').check();
+    await page.locator('input:has-text("Delete")').click();
+    await page.locator('#dialogDeleteBtn').click();
+    await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
 })
 
 /** 
@@ -436,4 +443,4 @@ async function deleteEmployementStatus({page}, statusName, statusName2) {
   }
   
 //// ****************** Arif [END] ***************************
-  
+});
