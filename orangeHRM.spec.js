@@ -126,6 +126,7 @@ test.describe('Employee List',() => { //Data driven from external xlsx file
         await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
       } 
     });
+  });
 
 test.describe('Employee List',() => { //Data driven from external xlsx file
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
@@ -283,6 +284,7 @@ test.describe(' Add New Key Performance Indicator',() => {
   });
 
 });**/
+
 
 // Arif
 
