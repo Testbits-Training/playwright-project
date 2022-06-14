@@ -14,15 +14,15 @@ Install the VS Code extension from the marketplace.
 
 If you don't have the Playwright Test npm package installed in your project, or if you are starting with a new testing project, "Install Playwright" action will help you get started.
 
-Install Playwright
+* To install Playwright
 Pick the browsers you'd like to use by default, don't worry, you'll be able to change them later to add or configure the browsers used.
 
 Choose browsers
 The extension automatically detects if you have [Playwright Test] installed and loads the [Playwright Test] projects into Visual Studio Code. By default it will select the first project as a run profile and inside the test explorer you can change this behavior to run a single test in multiple or different browsers.
 
-install xlsx npm
+* To install xlsx module : `npm install xlsx`
 
-$ npm install xlsx
+
 
  End Introduction & Installation
 
