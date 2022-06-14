@@ -264,6 +264,7 @@ test.describe('Delete Key Performance Indicator', () => {
    
     });
 
+
   test('(+) Delete Multiple Key Performance Indicator', async ({page}) =>{
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
     await page.locator('xpath=//a[text()=' +'"'+ KPIDEL[1] +'"]//preceding::input[1]').check();
@@ -274,6 +275,7 @@ test.describe('Delete Key Performance Indicator', () => {
   })
 })
 /**************************************Eqal Ends here********************************************************/
+
 
 // Arif
 
@@ -425,4 +427,4 @@ async function deleteEmployementStatus({page}, statusName, statusName2) {
   }
   
 //// ****************** Arif [END] ***************************
-  
+});
