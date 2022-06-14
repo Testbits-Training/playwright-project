@@ -36,6 +36,11 @@ const jobDesc = [
   'Automation',
   'Manual'
 ]
+const KPIDEL = [
+  'Test',
+  'Test2',
+  'Test3'
+]
 
 
 test.describe('Login',()=>{ 
@@ -202,11 +207,11 @@ test.describe(' Add New Key Performance Indicator',() => {
  
     test('(+) Insert New KPI',async ({page}) => {  
      
-      for (var i=0; i<jobDesc.length; i++) {
+      for (var i=0; i<KPIDEL.length; i++) {
       await page.locator('input:has-text("Add")').click();
       await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/saveKpi');
       await page.locator('select[name="defineKpi360\\[jobTitleCode\\]"]').selectOption('23');
-      await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill(jobDesc[i]);
+      await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill(KPIDEL[i]);
       await page.locator('input[name="defineKpi360\\[minRating\\]"]').fill(VALID_MIN_RATING);
       await page.locator('input[name="defineKpi360\\[maxRating\\]"]').fill(VALID_MAX_RATING);
       await page.locator('input:has-text("Save")').click();
@@ -243,29 +248,35 @@ test.describe(' Add New Key Performance Indicator',() => {
   
 });
 
+
+
 test.describe('Delete Key Performance Indicator', () => {
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
 
+
+ 
   test('(+) Successfully delete a key performance indicator', async ({ page }) => {
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-    await page.locator('xpath=//a[text()=' +'"'+ JobDesc +'"]//preceding::input[1]').check();
-    //await page.locator('xpath=//a[text()=' +'"'+ JobDesc2 +'"]//preceding::input[1]').check();
+    await page.locator('xpath=//a[text()=' +'"'+ KPIDEL[0] +'"]//preceding::input[1]').check();
     await page.locator('input:has-text("Delete")').click();
     await page.locator('#dialogDeleteBtn').click();
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-    //await page.locator('//a[text()='+ '"' + USER_FIELDS[3] + '"]//preceding::input[1]').check();
    
     });
-  test('(+) Successfully delete multiple key Performance indicator', async ({ page }) =>{
+
+
+  test('(+) Delete Multiple Key Performance Indicator', async ({page}) =>{
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-    await page.locator('xpath=//a[text()="Test"]//preceding::input[1]').check();
-    await page.locator('xpath=//a[text()="Test2"]//preceding::input[1]').check();
+    await page.locator('xpath=//a[text()=' +'"'+ KPIDEL[1] +'"]//preceding::input[1]').check();
+    await page.locator('xpath=//a[text()=' +'"'+ KPIDEL[2] +'"]//preceding::input[1]').check();
     await page.locator('input:has-text("Delete")').click();
     await page.locator('#dialogDeleteBtn').click();
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-});
+  })
+})
+/**************************************Eqal Ends here********************************************************/
 
-/*****************************************EQAL ENDS HERE*****************************************************/
+
 // Arif
 
 test.describe('Employment status',() => {
