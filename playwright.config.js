@@ -1,5 +1,5 @@
 const { devices } = require('@playwright/test');
-const loginState = require('./loginState');
+
 
 /** @type {import('@playwright/test').PlaywrightTestConfig} */
 const config = {
@@ -13,7 +13,7 @@ const config = {
       headless: false,
       }
   },
-  globalSetup: require.resolve('./loginState'),
+  globalSetup: require.resolve('./loginState'), //for save login
   projects: [
     {
       name: 'chromium',
