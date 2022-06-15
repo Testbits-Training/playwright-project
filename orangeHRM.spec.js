@@ -102,6 +102,7 @@ test.describe('Users',() => {
       });
 });
 
+
 test.describe('Employee List',() => { //Data driven from external xlsx file
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
 
@@ -125,6 +126,32 @@ test.describe('Employee List',() => { //Data driven from external xlsx file
         await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
       } 
     });
+
+test.describe('Employee List',() => { //Data driven from external xlsx file
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+
+    test('(+) Successfull add employee', async ({page}) => {
+        //get excel data
+      var XLSX = require("xlsx");
+      var workbook = XLSX.readFile("data/Employee.xlsx");
+      let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      var range = XLSX.utils.decode_range(worksheet['!ref']); //convert A1 range to 0 indexed form
+        
+
+      for (let index = 2; index <= range.e.r + 1 ; index++) { //loop through each rows in XLSX file
+        const firstName = worksheet[`A${index}`].v;
+        const secondName = worksheet[`B${index}`].v;
+        const filePath = worksheet[`C${index}`].v;  //path for file directory
+        await page.goto('https://opensource-demo.orangehrmlive.com/index.php/pim/viewEmployeeList/reset/1')
+        await page.locator('#btnAdd').click();
+        await page.locator('#firstName').fill(firstName);
+        await page.locator('#lastName').fill(secondName);
+        await page.setInputFiles('#photofile',filePath);
+        await page.locator('#btnSave').click();
+        await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
+      } 
+    });
+
  
       test('(-) Users enter invalid username', async ({page}) => {
        
@@ -141,6 +168,8 @@ test.describe('Employee List',() => { //Data driven from external xlsx file
         
       });
 });
+
+
 
 
 //Eql
@@ -336,8 +365,11 @@ test.describe('Punch In and Punch Out',() => {
 test.describe('Employee Records',() => {
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
   
+  test.beforeEach(async ({page}) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewAttendanceRecord');
+  });
     test('(+) Successfully shows the record', async ({page}) => {
-      await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewAttendanceRecord');
+      
       await page.locator('input[name="attendance\\[employeeName\\]\\[empName\\]"]').fill('jenny charls morphan');
       await page.locator('input[name="attendance\\[date\\]"]').fill('2022-06-22');
       await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
@@ -347,7 +379,7 @@ test.describe('Employee Records',() => {
     });
  
     test('(-) User did not enter employee name', async ({page}) => {
-     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewAttendanceRecord');
+     
      await page.locator('input[name="attendance\\[date\\]"]').fill('2022-06-22');
      await page.locator('input[name="attendance\\[date\\]"]').press('Enter');
      await page.locator('input:has-text("View")').click();
@@ -356,7 +388,7 @@ test.describe('Employee Records',() => {
    });
  
    test('(-) User did select any date', async ({page}) => {
-     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/attendance/viewAttendanceRecord');
+     
      await page.locator('input[name="attendance\\[employeeName\\]\\[empName\\]"]').fill('jenny charls morphan');
      await page.locator('input[name="attendance\\[date\\]"]').fill('');
      await page.locator('input:has-text("View")').click();
