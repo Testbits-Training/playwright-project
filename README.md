@@ -36,14 +36,15 @@ Run from your project's root directory in Visual Studio Code
 > `npm install xlsx`
 
 
-
-
-
+* To install Playwright
+Pick the browsers you'd like to use by default, don't worry, you'll be able to change them later to add or configure the browsers used.
 
 
 Playwright doesn't come with the built-in support for BDD so we are going to use the help of another tool Cucumber
    
 `npm i -D @cucumber/cucumber@7.3.1 @cucumber/pretty-formatter`
+
+* To install xlsx module : `npm install xlsx`
 
 
  End Introduction & Installation
@@ -56,6 +57,36 @@ Playwright doesn't come with the built-in support for BDD so we are going to use
 - get external data sources from .xlsx file by using .xlsx npm modules
 - designing test cases using BDD Test Framework (Cucumber intergration)
 
-// List of test cases
+## List of test cases in this project
+
+There are 10 test cases provided for this Playwright project:
+
+1. Login
+2. Users
+3. Employee List
+4. Search Key Performance Indicator
+5. Add New Key Performance Indicator
+6. Delete Key Performance Indicator
+7. Employment Status
+8. Search My Record
+9. Punch In and Punch Out
+10. Employee Records
+
 
 // Test execution / test run
+
+
+## References
+
+Here are some helpful links to get better understanding about Playwright:
+
+- https://www.youtube.com/watch?v=wGr5rz8WGCE
+- https://playwright.dev/docs/intro#installation
+- https://nodejs.org/en/
+- https://www.youtube.com/watch?v=nlIVf3QUIaQ
+- https://www.youtube.com/watch?v=IubdSQFOdiU
+- https://www.youtube.com/watch?v=DuBcKHRVA-Y
+- https://javascript.plainenglish.io/how-to-read-an-excel-file-in-node-js-6e669e9a3ce1
+- https://techoverflow.net/2018/05/28/how-to-iterate-over-xlsx-rows-using-js-xlsx/
+
+
