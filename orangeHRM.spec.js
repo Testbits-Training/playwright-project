@@ -1,4 +1,4 @@
-const { test, expect, chromium } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
 
 
 //Test Login Credentials
@@ -32,7 +32,7 @@ const STATUS_NAME = [
   'Apparenticeship'
 ];
 
-const jobDesc = [
+const JOB_DESCRIPTION = [
   'Automation',
   'Manual'
 ]
@@ -300,7 +300,7 @@ test.describe('Employment status',() => {
   });
 
   test('(-) Delete employment status', async ({page}) => {
-    await deleteEmployementStatus({page}, STATUS_NAME[0], 'null');
+    await deleteEmployementStatus({page}, STATUS_NAME[0]);
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
   });
