@@ -12,6 +12,14 @@ const VALID_USER = "John.Smith";
 const INVALID_USER = "Siti";
 
 //Fill User Fields
+
+const USER = [     
+  '1',                      // Select Option Value = Admin
+  'John',                   //First Name
+  'Smith',                  //Second Name
+  'Johasdwesssd1',          //Username
+  'abcd1234'                //Password
+
 const USER_ROLE = '1'
 const USER_FIRST_NAME = 'John'
 const USER_SECOND_NAME = 'Smith'
@@ -30,6 +38,7 @@ const STATUS_NAME = [
   'Internship',
   'Internship 2',
   'Apparenticeship'
+
 ];
 
 const JOB_DESCRIPTION = [
@@ -86,6 +95,8 @@ test.describe('Users',() => {
       });
 
       test('(-) Add users', async ({page}) => {
+
+        test('(-) Add users', async ({page}) => {
         await page.locator('#btnAdd').click();
         await page.locator('#systemUser_userType').selectOption(USER_ROLE);
         await page.locator('#systemUser_employeeName_empName').fill(USER_FIRST_NAME + ' ' + USER_SECOND_NAME);
@@ -96,6 +107,7 @@ test.describe('Users',() => {
         await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');
         await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
       });
+
 
       test('(-) Delete users', async ({page}) => {
         await page.locator('#searchSystemUser_employeeName_empName').fill(USER_USERNAME);
