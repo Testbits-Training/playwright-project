@@ -11,7 +11,7 @@ const VALID_USER = "John.Smith";
 const INVALID_USER = "Siti";
 
 //Fill User Fields
-const USER_FIELDS = [     
+const USER = [     
   '1',                      // Select Option Value = Admin
   'John',                   //First Name
   'Smith',                  //Second Name
@@ -63,11 +63,11 @@ test.describe('Users',() => {
 
       test('(-) Add users', async ({page}) => {
         await page.locator('input:has-text("Add")').click();
-        await page.locator('select[name="systemUser\\[userType\\]"]').selectOption(USER_FIELDS[0]);
-        await page.locator('input[name="systemUser\\[employeeName\\]\\[empName\\]"]').fill(USER_FIELDS[1] + ' ' + USER_FIELDS[2]);
-        await page.locator('input[name="systemUser\\[userName\\]"]').fill(USER_FIELDS[3]);
-        await page.locator('input[name="systemUser\\[password\\]"]').fill(USER_FIELDS[4]);
-        await page.locator('input[name="systemUser\\[confirmPassword\\]"]').fill(USER_FIELDS[4]);
+        await page.locator('select[name="systemUser\\[userType\\]"]').selectOption(USER[0]);
+        await page.locator('input[name="systemUser\\[employeeName\\]\\[empName\\]"]').fill(USER[1] + ' ' + USER[2]);
+        await page.locator('input[name="systemUser\\[userName\\]"]').fill(USER[3]);
+        await page.locator('input[name="systemUser\\[password\\]"]').fill(USER[4]);
+        await page.locator('input[name="systemUser\\[confirmPassword\\]"]').fill(USER[4]);
         await page.locator('#btnSave').click();
         await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');
         await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
