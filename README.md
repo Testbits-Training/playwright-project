@@ -57,6 +57,17 @@ Playwright doesn't come with the built-in support for BDD so we are going to use
 - get external data sources from .xlsx file by using .xlsx npm modules
 - designing test cases using BDD Test Framework (Cucumber intergration)
 
+## Procedure to do a test case
+
+1. Create new folder in your computer.
+2. Open Video Studio Code > open new folder > select folder that created in your computer.
+3. Open new terminal on your upper left, write “npm i -D @playwright/test” and wait until it is done. Then, write “npx playwright install”.
+4. To do web record for web testing, write, “npx playwright codegen (website name)” and then new window chrome web tab and playwright notepad will be appeared.
+5. Click any button for your testing and the code will be appeared on your playwright notepad.
+6. Copy related code on your notepad and paste it on your Visual Studio Code.
+7. Assertion is a reliable document to adjust your coding according to their needs.
+8. You can run your test case with clicking the triangle button.
+
 ## List of test cases in this project
 
 There are 10 test cases provided for this Playwright project:
