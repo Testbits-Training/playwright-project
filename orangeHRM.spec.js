@@ -19,6 +19,7 @@ const USER = [
   'Smith',                  //Second Name
   'Johasdwesssd1',          //Username
   'abcd1234'                //Password
+]
 
 const USER_ROLE = '1'
 const USER_FIRST_NAME = 'John'
