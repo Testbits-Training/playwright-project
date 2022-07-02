@@ -145,27 +145,7 @@ test.describe('Employee List',() => { //Data driven from external xlsx file
       } 
     });
 
- 
-      test('(-) Users enter invalid username', async ({page}) => {
-       
-        
-      });
-
-      test('(-) Add users', async ({page}) => {
-   
-        
-      });
-
-      test('(-) Delete users', async ({page}) => {
- 
-        
-      });
 });
-
-
-
-
-//Eql
 
 
 test.describe(' Search Key Performance Indicators',() =>{
