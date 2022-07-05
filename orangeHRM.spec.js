@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect, chromium } = require('@playwright/test');
 
 
 //Test Login Credentials
@@ -12,15 +12,6 @@ const VALID_USER = "John.Smith";
 const INVALID_USER = "Siti";
 
 //Fill User Fields
-
-const USER = [     
-  '1',                      // Select Option Value = Admin
-  'John',                   //First Name
-  'Smith',                  //Second Name
-  'Johasdwesssd1',          //Username
-  'abcd1234'                //Password
-]
-
 const USER_ROLE = '1'
 const USER_FIRST_NAME = 'John'
 const USER_SECOND_NAME = 'Smith'
@@ -39,19 +30,18 @@ const STATUS_NAME = [
   'Internship',
   'Internship 2',
   'Apparenticeship'
-
 ];
 
-const JOB_DESCRIPTION = [
+const jobDesc = [
   'Automation',
   'Manual'
 ]
-const KPIDEL = [
-  'Test',
-  'Test2',
-  'Test3'
-]
 
+async function createLogin({page}, username, password) {
+  await page.locator('input[name="txtUsername"]').fill(username);
+  await page.locator('input[name="txtPassword"]').fill(password);
+  await page.locator('input[id=btnLogin]').click();
+}
 
 test.describe('Login',()=>{ 
 
@@ -96,8 +86,6 @@ test.describe('Users',() => {
       });
 
       test('(-) Add users', async ({page}) => {
-
-        test('(-) Add users', async ({page}) => {
         await page.locator('#btnAdd').click();
         await page.locator('#systemUser_userType').selectOption(USER_ROLE);
         await page.locator('#systemUser_employeeName_empName').fill(USER_FIRST_NAME + ' ' + USER_SECOND_NAME);
@@ -109,7 +97,6 @@ test.describe('Users',() => {
         await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
       });
 
-
       test('(-) Delete users', async ({page}) => {
         await page.locator('#searchSystemUser_employeeName_empName').fill(USER_USERNAME);
         await page.locator('text=Search').click();
@@ -119,6 +106,32 @@ test.describe('Users',() => {
         await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
       });
 });
+
+
+test.describe('Employee List',() => { //Data driven from external xlsx file
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+
+    test('(+) Successfull add employee', async ({page}) => {
+        //get excel data
+      var XLSX = require("xlsx");
+      var workbook = XLSX.readFile("data/Employee.xlsx");
+      let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      var range = XLSX.utils.decode_range(worksheet['!ref']); //convert A1 range to 0 indexed form
+        
+      for (let index = 2; index <= range.e.r + 1 ; index++) { //loop through each rows in XLSX file
+        const firstName = worksheet[`A${index}`].v;
+        const secondName = worksheet[`B${index}`].v;
+        const filePath = worksheet[`C${index}`].v;  //path for file directory
+        await page.goto('https://opensource-demo.orangehrmlive.com/index.php/pim/viewEmployeeList/reset/1')
+        await page.locator('#btnAdd').click();
+        await page.locator('#firstName').fill(firstName);
+        await page.locator('#lastName').fill(secondName);
+        await page.setInputFiles('#photofile',filePath);
+        await page.locator('#btnSave').click();
+        await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
+      } 
+    });
+  });
 
 test.describe('Employee List',() => { //Data driven from external xlsx file
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
@@ -144,8 +157,7 @@ test.describe('Employee List',() => { //Data driven from external xlsx file
         await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
       } 
     });
-
-});
+  });
 
 
 test.describe(' Search Key Performance Indicators',() =>{
@@ -174,11 +186,11 @@ test.describe(' Add New Key Performance Indicator',() => {
  
     test('(+) Insert New KPI',async ({page}) => {  
      
-      for (var i=0; i<KPIDEL.length; i++) {
+      for (var i=0; i<jobDesc.length; i++) {
       await page.locator('input:has-text("Add")').click();
       await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/saveKpi');
       await page.locator('select[name="defineKpi360\\[jobTitleCode\\]"]').selectOption('23');
-      await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill(KPIDEL[i]);
+      await page.locator('input[name="defineKpi360\\[keyPerformanceIndicators\\]"]').fill(jobDesc[i]);
       await page.locator('input[name="defineKpi360\\[minRating\\]"]').fill(VALID_MIN_RATING);
       await page.locator('input[name="defineKpi360\\[maxRating\\]"]').fill(VALID_MAX_RATING);
       await page.locator('input:has-text("Save")').click();
@@ -215,36 +227,28 @@ test.describe(' Add New Key Performance Indicator',() => {
   
 });
 
-
-
 test.describe('Delete Key Performance Indicator', () => {
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
 
-
- 
   test('(+) Successfully delete a key performance indicator', async ({ page }) => {
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-    await page.locator('xpath=//a[text()=' +'"'+ KPIDEL[0] +'"]//preceding::input[1]').check();
+    await page.locator('xpath=//a[text()=' +'"'+ JobDesc +'"]//preceding::input[1]').check();
+    //await page.locator('xpath=//a[text()=' +'"'+ JobDesc2 +'"]//preceding::input[1]').check();
     await page.locator('input:has-text("Delete")').click();
     await page.locator('#dialogDeleteBtn').click();
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
+    //await page.locator('//a[text()='+ '"' + USER_FIELDS[3] + '"]//preceding::input[1]').check();
    
     });
-
-
-  test('(+) Delete Multiple Key Performance Indicator', async ({page}) =>{
+  test('(+) Successfully delete multiple key Performance indicator', async ({ page }) =>{
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-    await page.locator('xpath=//a[text()=' +'"'+ KPIDEL[1] +'"]//preceding::input[1]').check();
-    await page.locator('xpath=//a[text()=' +'"'+ KPIDEL[2] +'"]//preceding::input[1]').check();
+    await page.locator('xpath=//a[text()="Test"]//preceding::input[1]').check();
+    await page.locator('xpath=//a[text()="Test2"]//preceding::input[1]').check();
     await page.locator('input:has-text("Delete")').click();
     await page.locator('#dialogDeleteBtn').click();
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/performance/searchKpi');
-  })
-})
-/**************************************Eqal Ends here********************************************************/
-
-
-// Arif
+  });
+});
 
 test.describe('Employment status',() => {
   test.use({ storageState: 'storageState.json'});
@@ -253,7 +257,7 @@ test.describe('Employment status',() => {
     await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
    });
 
-  test('(-) Add employment status', async ({page}) => {
+  test('(+) Add employment status', async ({page}) => {
 
     await addEmployementStatus({page}, STATUS_NAME[0]);
     await addEmployementStatus({page}, STATUS_NAME[1]);
@@ -265,23 +269,20 @@ test.describe('Employment status',() => {
     await addEmployementStatus({page}, STATUS_NAME[0]);
     await expect(page.locator('text=Already exists')).toBeVisible();
   });
-
-  test('(-) Delete employment status', async ({page}) => {
-    await deleteEmployementStatus({page}, STATUS_NAME[0]);
+  test('(+) Delete employment status', async ({page}) => {
+    await deleteEmployementStatus({page}, STATUS_NAME[0], 'null');
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
   });
 
 
-  test('(-) Delete multiple employment status', async ({page}) => {
+  test('(+) Delete multiple employment status', async ({page}) => {
     await deleteEmployementStatus({page}, STATUS_NAME[1], STATUS_NAME[2])
     await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/employmentStatus');
     await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
   });
 
 });
-
-// Lailatul
 
 test.describe('Search My Records',() => {
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
@@ -357,11 +358,7 @@ test.describe('Employee Records',() => {
 
 });
 
-async function createLogin({page}, username, password) {
-  await page.locator('input[name="txtUsername"]').fill(username);
-  await page.locator('input[name="txtPassword"]').fill(password);
-  await page.locator('input[id=btnLogin]').click();
-}
+
 
 async function addKPI({page}, jobtitle, kpi, minRating, maxRating ) {
   await page.locator('select[name="defineKpi360\\[jobTitleCode\\]"]').selectOption(jobtitle);
@@ -371,7 +368,7 @@ async function addKPI({page}, jobtitle, kpi, minRating, maxRating ) {
   await page.locator('input:has-text("Save")').click();
 }
 
-// ****************** Arif ***************************
+
 async function addEmployementStatus({page}, statusName) {
   await page.locator('input:has-text("Add")').click();
   await page.locator('input[name="empStatus\\[name\\]"]').fill(statusName);
@@ -391,7 +388,5 @@ async function deleteEmployementStatus({page}, statusName, statusName2) {
     await page.locator('input:has-text("Delete")').click();
     await page.locator('#dialogDeleteBtn').click();
   }
-  }
+}
   
-//// ****************** Arif [END] ***************************
-});
