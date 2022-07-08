@@ -1,5 +1,6 @@
 const { test, expect, chromium } = require('@playwright/test');
 
+
 //Test Login Credentials
 const VALID_USERNAME = "Admin";
 const VALID_PASSWORD = "admin123";
@@ -60,32 +61,32 @@ test.describe('Users',() => {
       await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');  
     });
 
-      test('(+) Users enter valid username', async ({page}) => {
-        await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(VALID_USER);
+      test('(+) Search users enter valid username', async ({page}) => {
+        await page.locator('#searchSystemUser_userName').fill(VALID_USER);
         await page.locator('#searchBtn').click();
         await expect(page.locator('//td[@class="left"]//a')).toHaveText(VALID_USER);
       });
  
-      test('(-) Users enter invalid username', async ({page}) => {
-        await page.locator('input[name="searchSystemUser\\[userName\\]"]').fill(INVALID_USER);
+      test('(-) Search users enter invalid username', async ({page}) => {
+        await page.locator('#searchSystemUser_userName').fill(INVALID_USER);
         await page.locator('text=Search').click();
         await expect(page.locator('td[colspan="5"]')).toHaveText('No Records Found');
       });
 
       test('(-) Add users', async ({page}) => {
-        await page.locator('input:has-text("Add")').click();
-        await page.locator('select[name="systemUser\\[userType\\]"]').selectOption(USER_ROLE);
-        await page.locator('input[name="systemUser\\[employeeName\\]\\[empName\\]"]').fill(USER_FIRST_NAME + ' ' + USER_SECOND_NAME);
-        await page.locator('input[name="systemUser\\[userName\\]"]').fill(USER_USERNAME);
-        await page.locator('input[name="systemUser\\[password\\]"]').fill(USER_PASSWORD);
-        await page.locator('input[name="systemUser\\[confirmPassword\\]"]').fill(USER_PASSWORD);
+        await page.locator('#btnAdd').click();
+        await page.locator('#systemUser_userType').selectOption(USER_ROLE);
+        await page.locator('#systemUser_employeeName_empName').fill(USER_FIRST_NAME + ' ' + USER_SECOND_NAME);
+        await page.locator('#systemUser_userName').fill(USER_USERNAME);
+        await page.locator('#systemUser_password').fill(USER_PASSWORD);
+        await page.locator('#systemUser_confirmPassword').fill(USER_PASSWORD);
         await page.locator('#btnSave').click();
         await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');
         await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
       });
 
       test('(-) Delete users', async ({page}) => {
-        await page.locator('input[name="searchSystemUser\\[employeeName\\]\\[empName\\]"]').fill(USER_USERNAME);
+        await page.locator('#searchSystemUser_employeeName_empName').fill(USER_USERNAME);
         await page.locator('text=Search').click();
         await page.locator('//a[text()='+ '"' + USER_USERNAME + '"]//preceding::input[1]').check();
         await page.locator('#btnDelete').click();
@@ -118,6 +119,34 @@ test.describe('Employee List',() => { //Data driven from external xlsx file
         await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
       } 
     });
+});
+
+test.describe('Employee List',() => { //Data driven from external xlsx file
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+
+   
+      test('(+) Successfull add employee', async ({page}) => {
+        //get excel data
+        var XLSX = require("xlsx");
+        var workbook = XLSX.readFile("data/Employee.xlsx");
+        let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        var range = XLSX.utils.decode_range(worksheet['!ref']); //convert A1 range to 0 indexed form
+        
+        for (let index = 2; index <= range.e.r + 1 ; index++) { //loop through each rows in XLSX file
+          const firstName = worksheet[`A${index}`].v;
+          const secondName = worksheet[`B${index}`].v;
+          const filePath = worksheet[`C${index}`].v;  //path for file directory
+          await page.goto('https://opensource-demo.orangehrmlive.com/index.php/pim/viewEmployeeList/reset/1')
+          await page.locator('#btnAdd').click();
+          await page.locator('#firstName').fill(firstName);
+          await page.locator('#lastName').fill(secondName);
+          await page.setInputFiles('#photofile',filePath);
+          await page.locator('#btnSave').click();
+          await expect(page.locator('#profile-pic')).toHaveText(firstName + ' ' + secondName);
+        }
+       
+      });
+
  
       test('(-) Users enter invalid username', async ({page}) => {
        
@@ -148,7 +177,6 @@ test.describe(' Search Key Performance Indicators',() =>{
   });
 
     test('(+) Sort the list base on job title', async({page}) =>{
-      
       await page.locator('select[name="kpi360SearchForm\\[jobTitleCode\\]"]').selectOption(JOB_TITLE);
       await page.locator('input:has-text("Search")').click();
       await expect(page.locator('(//td[@class="left"])[2]')).toHaveText('HR Manager');
