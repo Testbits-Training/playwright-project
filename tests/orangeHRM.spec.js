@@ -1,5 +1,4 @@
-const { test } = require('../lambdatest-setup')
-const {expect} = require('@playwright/test');
+const { test, expect, chromium } = require('@playwright/test');
 
 
 //Test Login Credentials
@@ -107,6 +106,7 @@ test.describe('Users',() => {
         await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
       });
 });
+
 
 test.describe('Employee List',() => { //Data driven from external xlsx file
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
