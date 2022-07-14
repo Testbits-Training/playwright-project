@@ -19,7 +19,6 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-      fail-fast: false
     - uses: actions/upload-artifact@v2
       if: always()
       with:
