@@ -34,15 +34,6 @@ test.describe('New Todo', () => {
     await checkNumberOfTodosInLocalStorage(page, 2);
   });
 
-  test('should clear text input field when an item is added', async ({ page }) => {
-    // Create one todo item.
-    await page.locator('.new-todo').fill(TODO_ITEMS[0]);
-    await page.locator('.new-todo').press('Enter');
-
-    // Check that input is empty.
-    await expect(page.locator('.new-todo')).toBeEmpty();
-    await checkNumberOfTodosInLocalStorage(page, 1);
-  });
 
   test('should append new items to the bottom of the list', async ({ page }) => {
     // Create 3 items.
