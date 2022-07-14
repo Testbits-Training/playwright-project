@@ -159,7 +159,7 @@ test.describe(' Add New Key Performance Indicator',() => {
   });
 
  
-    test('(+) Insert New KPI',async ({page}) => {  
+    test('(+)Insert New KPI',async ({page}) => {  
      
       for (var i=0; i<jobDesc.length; i++) {
       await page.locator('input:has-text("Add")').click();
