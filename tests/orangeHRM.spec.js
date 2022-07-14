@@ -1,4 +1,5 @@
-const { test, expect, chromium } = require('@playwright/test');
+const { test } = require('../lambdatest-setup')
+const {expect} = require('@playwright/test');
 
 
 //Test Login Credentials
@@ -107,7 +108,6 @@ test.describe('Users',() => {
       });
 });
 
-
 test.describe('Employee List',() => { //Data driven from external xlsx file
   test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
 
@@ -159,7 +159,7 @@ test.describe(' Add New Key Performance Indicator',() => {
   });
 
  
-    test('(+)Insert New KPI',async ({page}) => {  
+    test('(+) Insert New KPI',async ({page}) => {  
      
       for (var i=0; i<jobDesc.length; i++) {
       await page.locator('input:has-text("Add")').click();
