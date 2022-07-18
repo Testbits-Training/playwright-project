@@ -1,4 +1,4 @@
-const {expect} = require('@playwright/test');
+/*const {expect} = require('@playwright/test');
 
 
 test.describe('Multilingual', () => {
@@ -30,5 +30,5 @@ test.describe('Special Log', () =>{
         await expect(page).toHaveURL('https://www.mediawiki.org/wiki/Manual:Language#lang-code');
       });
 })
-
+*/
 
