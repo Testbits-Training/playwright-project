@@ -1,19 +1,9 @@
 {
-  "name": "test",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@cucumber/cucumber": "^7.3.1",
-    "@cucumber/pretty-formatter": "^1.0.0-alpha.2",
-    "@playwright/test": "^1.22.2",
-    "playwright": "^1.22.2"
-  },
   "dependencies": {
-    "xlsx": "^0.18.5"
-  }
+    "playwright": "^1.23.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.23.4"
+  },
+  "scripts": {}
 }
