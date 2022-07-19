@@ -1,0 +1,21 @@
+{
+  "name": "playwright-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Testbits-Training/playwright-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Testbits-Training/playwright-project/issues"
+  },
+  "homepage": "https://github.com/Testbits-Training/playwright-project#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.23.4"
+  }
+}
