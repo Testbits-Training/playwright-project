@@ -9,5 +9,6 @@ test("Create an Incident", async ({request, baseURL}) => {
         }
     })
     expect(_response.status()).toBe(201)
-
+    expect(_response.ok()).toBeTruthy();
+    console.log(await _response.json)
 });
