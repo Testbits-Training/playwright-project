@@ -18,6 +18,8 @@ The tested web application is called Orange HRM, which can be visited at https:/
    ```
     npm install
    ```
+   
+   It is recommended to relaunch the VS code after the installation.
     
 **Running Test**
 -   Running all tests
