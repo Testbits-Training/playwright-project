@@ -64,6 +64,16 @@ The tested web application is called Orange HRM, which can be visited at https:/
 
 Reference: https://playwright.dev/docs/running-tests
 
+## HTML Reporter
+
+The HTML Reporter shows you a full report of your tests allowing you to filter the report by browsers, passed tests, failed tests, skipped tests and flaky tests. By default, the HTML report is opened automatically if some of the tests failed.
+
+```
+npx playwright show-report
+```
+
+
+
 
 ## Playwright key features in this project
 
