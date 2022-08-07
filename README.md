@@ -16,7 +16,7 @@ The tested web application is called Orange HRM, which can be visited at https:/
 
     
    ```
-    npx playwright test
+    npm install
    ```
     
 **Running Test**
