@@ -13,12 +13,12 @@ The tested web application is called Orange HRM, which can be visited at https:/
  - Playwright Test extension (VS Code)
 
 **Installation**
-   
-    ```
-    npm install
-    ```
 
-
+    
+   ```
+    npx playwright test
+   ```
+    
 **Running Test**
 -   Running all tests
     
