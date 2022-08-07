@@ -1,5 +1,6 @@
-const { test } = require('../lambdatest-setup')
-const {expect} = require('@playwright/test');
+// const { test } = require('../lambdatest-setup')
+const {expect , test } = require('@playwright/test');
+
 
 
 //Test Login Credentials
@@ -14,9 +15,8 @@ const INVALID_USER = "Siti";
 
 //Fill User Fields
 const USER_ROLE = '1'
-const USER_FIRST_NAME = 'John'
-const USER_SECOND_NAME = 'Smith'
-const USER_USERNAME = 'Johasdwesssd1'
+const USER_FIRST_NAME = 'John'  // existing user
+const USER_SECOND_NAME = 'Smith'// existing user
 const USER_PASSWORD ='abcd1234'                
 
 //KPI
@@ -68,8 +68,11 @@ test.describe('Login',()=>{
 });
 
 test.describe('Users',() => {
-  test.use({ storageState: 'storageState.json'}); //for reuse sign in state (Take note group members)
+  test.use({ storageState: 'storageState.json'}); //for reuse sign in state 
   
+  
+
+
     test.beforeEach(async ({page}) => {
       await page.goto('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');  
     });
@@ -86,22 +89,20 @@ test.describe('Users',() => {
         await expect(page.locator('td[colspan="5"]')).toHaveText('No Records Found');
       });
 
-      test('(-) Add users', async ({page}) => {
+      test('(+) Add & delete users', async ({page}) => {
+        const userName = makeid(5); //Generate random username with length 5
         await page.locator('#btnAdd').click();
         await page.locator('#systemUser_userType').selectOption(USER_ROLE);
         await page.locator('#systemUser_employeeName_empName').fill(USER_FIRST_NAME + ' ' + USER_SECOND_NAME);
-        await page.locator('#systemUser_userName').fill(USER_USERNAME);
+        await page.locator('#systemUser_userName').fill(userName);
         await page.locator('#systemUser_password').fill(USER_PASSWORD);
         await page.locator('#systemUser_confirmPassword').fill(USER_PASSWORD);
         await page.locator('#btnSave').click();
         await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/index.php/admin/viewSystemUsers');
         await expect(page.locator('text=Successfully Saved Close')).toBeVisible();
-      });
-
-      test('(-) Delete users', async ({page}) => {
-        await page.locator('#searchSystemUser_employeeName_empName').fill(USER_USERNAME);
+        await page.locator('#searchSystemUser_employeeName_empName').fill(userName);
         await page.locator('text=Search').click();
-        await page.locator('//a[text()='+ '"' + USER_USERNAME + '"]//preceding::input[1]').check();
+        await page.locator('//a[text()='+ '"' + userName + '"]//preceding::input[1]').check();
         await page.locator('#btnDelete').click();
         await page.locator('#dialogDeleteBtn').click();
         await expect(page.locator('text=Successfully Deleted Close')).toBeVisible();
@@ -364,4 +365,16 @@ async function deleteEmployementStatus({page}, statusName, statusName2) {
     await page.locator('#dialogDeleteBtn').click();
   }
 }
+
+function makeid(length) { // Generate random username
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * 
+    charactersLength));
+  }
+  return result;
+}
+
   
