@@ -2,7 +2,7 @@
 
 This project is about to show some samples of web automation test project using Playwright. For those who are new to automation testing, this sample project also will help you ease while learning Playwright online at your own pace.
 
-The tested web application is called Orange HRM, which can be visited at https://opensource-demo.orangehrmlive.com/. This app is a mock website that was created for automation testers to practice their skills on. The website is meant to mimic a Human Resources Management (HRM) application. Inside this repository, you can choose the one with or without LamdaTest configuration.
+The tested web application is called Orange HRM, which can be visited at https://opensource-demo.orangehrmlive.com/. This app is a mock website that was created for automation testers to practice the automation testing. The website is meant to mimic a Human Resources Management (HRM) application. Inside this repository, you can choose the one with or without LamdaTest configuration.
 
 ## Getting started
 
