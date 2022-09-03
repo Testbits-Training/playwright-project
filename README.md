@@ -1,3 +1,5 @@
+*Test*
+
 # playwright-project
 
 This project is about to show some samples of web automation test project using Playwright. For those who are new to automation testing, this sample project also will help you ease while learning Playwright online at your own pace.
